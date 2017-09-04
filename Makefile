@@ -1,4 +1,4 @@
-REBAR=$(shell [ -f ./rebar ] && echo "./rebar" || echo "rebar" )
+REBAR=$(shell [ -f ./rebar3 ] && echo "./rebar3" || echo "rebar3" )
 CC=$(shell clang -v >/dev/null && echo "clang" || echo "gcc")
 
 .PHONY: all erl test clean doc 
@@ -6,27 +6,16 @@ CC=$(shell clang -v >/dev/null && echo "clang" || echo "gcc")
 all: test perf
 
 build:
-	$(REBAR) get-deps compile
-
-buildplt:
-	if [ ! -f .plt ]; then \
-        dialyzer --build_plt --output_plt .plt --apps kernel stdlib ; \
-    fi
-
-pltclean:
-	@rm .plt
+	$(REBAR) compile
 
 dialyze:
-	@ERL_LIBS=deps dialyzer --fullpath -Wno_undefined_callbacks \
-        --plts .plt \
-        -r ebin --src src \
-        | grep -v -f ./dialyzer.ignore-warnings
+	rebar3 dialyzer
 
-test: build
-	$(REBAR) skip_deps=true ct
+test:
+	$(REBAR) ct
 
-eqc: build
-	$(REBAR) skip_deps=true eunit
+eqc:
+	$(REBAR) as eqc eqc
 
 clean:
 	$(REBAR) clean
@@ -46,8 +35,8 @@ perf: build
 	perf/hh 100000000 1000000 5
 	perf/hh 1000000000 1000000 5
 
-doc: build
-	$(REBAR) doc
+doc:
+	$(REBAR) edoc
 
 demo-elixir: doc
 	elixir -pa ebin -r examples/simple.exs -e "Simple.main"

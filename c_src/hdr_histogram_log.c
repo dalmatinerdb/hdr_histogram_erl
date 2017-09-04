@@ -77,6 +77,38 @@
 
 #include "byteorder.h"
 
+#elif __FreeBSD__
+
+#include <sys/types.h>
+#include <sys/endian.h>
+# if __BYTE_ORDER == __LITTLE_ENDIAN
+#  ifndef htobe32
+#    define htobe32(x) bswap32 (x)
+#  endif
+#  ifndef be32toh
+#    define be32toh(x) bswap32 (x)
+#  endif
+#  ifndef htobe64
+#    define htobe64(x) bswap64 (x)
+#  endif
+#  ifndef be64toh
+#    define be64toh(x) bswap64 (x)
+#   endif
+# else
+#  ifndef htobe32
+#    define htobe32(x) (x)
+#  endif
+#  ifndef be32toh
+#    define be32toh(x) (x)
+#  endif
+#  ifndef htobe64
+#    define htobe64(x) (x)
+#  endif
+#  ifndef be64toh
+#    define be64toh(x) (x)
+#   endif
+# endif
+
 #else
 
 #warning "Platform not supported\n"
