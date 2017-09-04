@@ -1,7 +1,8 @@
 {application,hdr_histogram,
              [{description,"High Dynamic Range Histogram Erlang/OTP library"},
-              {vsn,"1.0.0"},
+              {vsn,"0.3.0"},
               {modules,[hdr_histogram]},
               {registered,[]},
               {applications,[kernel,stdlib]},
+              {licenses, ["BSD"]},
               {env,[]}]}.
